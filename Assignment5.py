@@ -58,6 +58,15 @@ def main():
                 for h, w in (line.strip().split(",") #split by comma
                              for line in lines[1:])#after first line
             ]  
+
+    #sum of all rectangle areas
+    totalWidth = sum(rect.width for rect in rectangles)
+    totalHeight = sum(rect.height for rect in rectangles)
+
+    #fit all rectangles in canvas
+    canvas_width = max(totalWidth, max(rect.width for rect in rectangles))
+    canvas_height = max(totalHeight, max(rect.height for rect in rectangles)) 
+
     #pack rectanges
     packrects = pack(rectangles, (canvas_height, canvas_width))
 
