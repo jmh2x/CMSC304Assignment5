@@ -1,85 +1,77 @@
 #Govan Henry CMSC304 Assignment 5 3/15/2025
 import tkinter
 from rectpack import newPacker
-import sys 
+import sys
 
 #class CustomCanvas
 class CustomCanvas:
-     def __init__(self, height: int, width: int): #constructor with height and width as ints
-        self.root =tkinter.Tk() #creates window
-        self.canvas = tkinter.Canvas(self.root, height=height, width=width, bg="black") #create canvas, black
-        self.canvas.pack() #add canvas in window
+    def __init__(self, height: int, width: int):#constructor with height and width as ints
+        self.root = tkinter.Tk()#creates window
+        self.canvas = tkinter.Canvas(self.root, height=height, width=width, bg="black")#create canvas, black
+        self.canvas.pack()#pack canvas in window
 
-     def display(self): #display canvas in window
+    def display(self):#display canvas in window
         self.root.mainloop()
 
 #class Rectangle
 class Rectangle:
-    def __init__(self, height: int, width: int, x: int = 0, y: int = 0): #constructor with height width as ints, x and y = 0
-        self.height = height 
-        self.width = width 
-        self.x = x 
-        self.y = y 
-    
-    def draw(self,canvas): #draw rectangle on canvas
-        x1, y1 = self.x, self.y #top left corner
-        x2, y2 = x1 + self.width, y1 + self.height #bottom right corner
-        canvas.create_rectangle(x1, y1, x2, y2, fill="blue") #draw rectangle, blue
+    def __init__(self, width: int, height: int, x: int = 0, y: int = 0): #constructor with height width as ints, x and y = 0
+        self.width = width
+        self.height = height
+        self.x = x
+        self.y = y
+
+    def draw(self, canvas):#draw rectangle on canvas
+        x1 = self.x#top left corner,x coord
+        y1 = self.y#top left corner,y coord
+        x2 = x1 + self.width#bottom right corner,x coord
+        y2 = y1 + self.height#bottom right corner,y coord
+        canvas.create_rectangle(x1, y1, x2, y2, fill="blue")#draw rectangle, blue
 
 #pack function
 def pack(allRect, canvasSize):
-    p = newPacker(rotation=False)  #create packer, disable rotation
+    p = newPacker()#create packer
 
     #add rectangle
     for rect in allRect:
-        p.add_rect(rect.width, rect.height)  
- 
-    p.add_bin(canvasSize[1], canvasSize[0])  #(width, height)
-    
+        p.add_rect(rect.width, rect.height)
+
+    p.add_bin(canvasSize[1], canvasSize[0]) #(width, height)
+
     p.pack()#run packer
 
-    packrects = [] #create list
-    for rect_bin in p: #each bin
-        for rect in rect_bin: #each rect
-            width, height, x, y = rect.width, rect.height, rect.x, rect.y
-            packrects.append(Rectangle(width, height, x, y))  #add new rectangle to list
+    packrects = []#create list
+    for rect_bin in p:#each bin in packer
+        for rect in rect_bin:#each rect in bin
+            x = rect.x
+            y = rect.y
+            width = rect.width
+            height = rect.height
+            packrects.append(Rectangle(width, height, x, y)) #add new rectangle to list
 
-    return packrects  #Return list
+    return packrects #return list
 
 #main function
 def main():
-    file_path = sys.argv[1]  #read file path
+    file_path = sys.argv[1]#read file path
 
-    with open(file_path) as file: #open and read file
-            lines = file.readlines() 
-            canvas_height, canvas_width = map(int, lines[0].strip().split(","))#first line = canvas size , split by commma
-            rectangles = [
-                Rectangle(int(w), int(h)) #create rectangle
-                for h, w in (line.strip().split(",") #split by comma
-                             for line in lines[1:])#after first line
-            ]  
-            #sum of all rectangles
-            max_width = max(rect.width for rect in rectangles)
-            max_height = max(rect.height for rect in rectangles)
-            total_width = sum(rect.width for rect in rectangles)
-            total_height = sum(rect.height for rect in rectangles)
+    with open(file_path) as file:#open and read file
+        lines = file.readlines()
+        canvas_height, canvas_width = map(int, lines[0].strip().split(","))#first line = canvas size , split by commma
+        rectangles = [
+            Rectangle(int(w), int(h)) #create rectangle
+            for h, w in (line.strip().split(",") #split by comma
+                         for line in lines[1:])#all lines after first line
+        ]
+    
+    packed_rects = pack(rectangles, (canvas_height, canvas_width))#pack rectanges
 
-            #canvas size
-            canvas_width = max(max_width, total_width)
-            canvas_height = max(max_height, total_height)
+    canvas = CustomCanvas(canvas_height, canvas_width)#create canvas
 
-    #pack rectanges
-    packrects = pack(rectangles, (canvas_height, canvas_width))
-
-    #create canvas
-    canvas = CustomCanvas(canvas_height, canvas_width)
-
-    #draw rect on canvas
-    for rect in packrects:
+    for rect in packed_rects:#draw rect on canvas
         rect.draw(canvas.canvas)
 
-    #dipslay canvas
-    canvas.display()
+    canvas.display()#dipslay canvas
 
 if __name__ == "__main__":
-    main()  #run main
+    main() #run main
