@@ -59,7 +59,7 @@ def main():
         lines = file.readlines()
         canvas_height, canvas_width = map(int, lines[0].strip().split(","))#first line = canvas size , split by commma
         rectangles = [
-            Rectangle(int(w), int(h)) #create rectangle
+            Rectangle(int(h), int(w)) #create rectangle
             for h, w in (line.strip().split(",") #split by comma
                          for line in lines[1:])#all lines after first line
         ]
