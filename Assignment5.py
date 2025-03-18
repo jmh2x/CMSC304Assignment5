@@ -15,7 +15,7 @@ class CustomCanvas:
 
 #class Rectangle
 class Rectangle:
-    def __init__(self, width: int, height: int, x: int = 0, y: int = 0): #constructor with height width as ints, x and y = 0
+    def __init__(self,height: int,width: int, x: int = 0, y: int = 0): #constructor with height width as ints, x and y = 0
         self.width = width
         self.height = height
         self.x = x
@@ -47,7 +47,7 @@ def pack(allRect, canvasSize):
             y = rect.y
             width = rect.width
             height = rect.height
-            packrects.append(Rectangle(width, height, x, y)) #add new rectangle to list
+            packrects.append(Rectangle(height, width, x, y)) #add new rectangle to list
 
     return packrects #return list
 
